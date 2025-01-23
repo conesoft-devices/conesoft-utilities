@@ -13,6 +13,7 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
     Serial.println(name);
     pinMode(LED_BUILTIN, OUTPUT);
     LittleFS.begin();
+    WiFi.setHostname(name.substr(0, 32));
     WiFi.setPhyMode(WIFI_PHY_MODE_11G);
     WiFi.forceSleepBegin();
     WiFi.setPhyMode(WIFI_PHY_MODE_11G);
