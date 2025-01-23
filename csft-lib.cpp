@@ -33,6 +33,16 @@ void csft_loop()
     drd.loop();
 }
 
+void csft_loop_for(int milliseconds)
+{
+    unsigned long now = millis();
+    while (millis() < now + milliseconds)
+    {
+        delay(10);
+        csft_loop();
+    }
+}
+
 void csft_web_request_internal(String url, String name, String id, void (*process_response)(HTTPClient &http))
 {
     WiFiClient wificlient;
