@@ -3,6 +3,7 @@
 #include <DoubleResetDetector.h>
 #include <LittleFS.h>
 #include <ESP8266WiFi.h>
+#include <WiFiClientSecureBearSSL.h>
 
 DoubleResetDetector drd(10, 0);
 
@@ -43,10 +44,12 @@ void csft_loop_for(int milliseconds)
 
 void csft_web_request_internal(String url, String name, String id, void (*process_response)(HTTPClient &http))
 {
-    WiFiClient wificlient;
+    BearSSL::WiFiClientSecure client;
     HTTPClient http;
 
-    if (http.begin(wificlient, url))
+    client.setInsecure();
+
+    if (http.begin(client, url))
     {
         http.setUserAgent(name);
         http.addHeader(name + "-Id", id);
@@ -70,10 +73,10 @@ void csft_web_request(String url, String name, String id_suffix, void (*process_
 
 void csft_binary_read_response_to(HTTPClient &http, uint8_t *target, int size)
 {
-    WiFiClient wificlient = http.getStream();
+    Stream& client = http.getStream();
     size_t length = http.getSize();
     for (size_t index = 0; index < length; index += 0)
     {
-        index += wificlient.readBytes(target + index, size - index);
+        index += client.readBytes(target + index, size - index);
     }
 }
