@@ -1,0 +1,28 @@
+{
+    "name": "Conesoft-Utilities",
+    "version": "1.0.0",
+    "keywords": "esp8266, wifi",
+    "description": "small library with utilies for conesoft web devices",
+    "authors": [
+        {
+            "name": "davepermen"
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/conesoft-devices/conesoft-utilities"
+    },
+    "frameworks": "*",
+    "platforms": [
+        "espressif32",
+        "espressif8266"
+    ],
+    "dependencies": {
+        "DNSServer": "*",
+        "ESP8266WebServer": "*",
+        "ESP-WiFiSettings": "*",
+        "DoubleResetDetector": "*",
+        "LittleFS": "*",
+        "ESP8266HTTPClient": "*"
+    }
+}
