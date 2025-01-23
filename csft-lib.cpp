@@ -2,6 +2,7 @@
 
 #include <DoubleResetDetector.h>
 #include <LittleFS.h>
+#include <ESP8266WiFi.h>
 
 DoubleResetDetector drd(10, 0);
 
@@ -32,7 +33,7 @@ void csft_loop()
     drd.loop();
 }
 
-void csft_web_request(String url, String name, String id, void (*process_response)(HTTPClient &http))
+void csft_web_request_internal(String url, String name, String id, void (*process_response)(HTTPClient &http))
 {
     WiFiClient wificlient;
     HTTPClient http;
@@ -47,5 +48,24 @@ void csft_web_request(String url, String name, String id, void (*process_respons
             process_response(http);
         }
         http.end();
+    }
+}
+
+void csft_web_request(String url, String name, void (*process_response)(HTTPClient &http))
+{
+    csft_web_request_internal(url, name, WiFi.macAddress(), process_response);
+}
+void csft_web_request(String url, String name, String id_suffix, void (*process_response)(HTTPClient &http))
+{
+    csft_web_request_internal(url, name, WiFi.macAddress() + "-" + id_suffix, process_response);
+}
+
+void csft_binary_read_response_to(HTTPClient &http, uint8_t *target, int size)
+{
+    WiFiClient wificlient = http.getStream();
+    size_t length = http.getSize();
+    for (size_t index = 0; index < length; index += 0)
+    {
+        index += wificlient.readBytes(target + index, size - index);
     }
 }
