@@ -1,7 +1,13 @@
 #ifndef CSFT_WEB_DEVICE_LIB
 #define CSFT_WEB_DEVICE_LIB
 
-void csft_setup(char *name, void (*configure_wifisettings_parameters)());
+#include <stdlib.h>
+#include <ESP8266WiFi.h>
+#include <WiFiSettings.h>
+#include <ESP8266HTTPClient.h>
+
+
+void csft_setup(String name, void (*configure_wifisettings_parameters)());
 
 void csft_loop();
 
