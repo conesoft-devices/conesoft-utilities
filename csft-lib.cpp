@@ -63,13 +63,17 @@ void csft_web_request_internal(String url, String name, String id, void (*proces
         http.setUserAgent(name);
         http.addHeader(name + "-Id", id);
         Serial.println("GET");
-        http.GET();
-        Serial.println("getting response");
-        if (process_response != 0)
+        int response = http.GET();
+        Serial.print("getting response ");
+        Serial.println(response);
+        if (response > 0)
         {
-            Serial.println("processing response");
-            process_response(http);
-            Serial.println("processed response");
+            if (process_response != 0)
+            {
+                Serial.println("processing response");
+                process_response(http);
+                Serial.println("processed response");
+            }
         }
         Serial.println("end");
         http.end();
@@ -88,7 +92,7 @@ void csft_web_request(String url, String name, String id_suffix, void (*process_
 void csft_binary_read_response_to(HTTPClient &http, uint8_t *target, int size)
 {
     Serial.println("read binary response");
-    Stream& client = http.getStream();
+    Stream &client = http.getStream();
     size_t length = http.getSize();
     Serial.print("length: ");
     Serial.println(length);
