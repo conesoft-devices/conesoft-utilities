@@ -126,3 +126,10 @@ bool csft_binary_read_response_to(HTTPClient &http, uint8_t *target, size_t size
     }
     return true;
 }
+
+void csft_switch_baudrate(int baudrate)
+{
+    delay(100);
+    Serial.end();
+    Serial.begin(baudrate);
+}
