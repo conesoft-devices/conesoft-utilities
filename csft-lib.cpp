@@ -14,6 +14,7 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
     Serial.println(name);
     pinMode(LED_BUILTIN, OUTPUT);
     LittleFS.begin();
+    WiFi.forceSleepBegin();
     WiFi.setPhyMode(WIFI_PHY_MODE_11G);
 
     WiFiSettings.hostname = "csft-device-";
@@ -24,7 +25,10 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
         WiFiSettings.portal();
     }
 
-    WiFiSettings.connect();
+    if (WiFiSettings.connect(false) == false)
+    {
+        ESP.restart();
+    }
 }
 
 void csft_loop()
