@@ -87,7 +87,7 @@ bool csft_web_request(String url, String name, String id_suffix, bool (*process_
     return csft_web_request_internal(url, name, WiFi.macAddress() + "-" + id_suffix, process_response);
 }
 
-bool csft_binary_read_response_to(HTTPClient &http, uint8_t *target, int size)
+bool csft_binary_read_response_to(HTTPClient &http, uint8_t *target, size_t size)
 {
     Stream &client = http.getStream();
     size_t length = http.getSize();

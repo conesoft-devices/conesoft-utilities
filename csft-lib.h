@@ -14,6 +14,6 @@ void csft_loop_for(int milliseconds);
 bool csft_web_request(String url, String name, bool (*process_response)(HTTPClient &http) = 0);
 bool csft_web_request(String url, String name, String id_suffix, bool (*process_response)(HTTPClient &http) = 0);
 
-bool csft_binary_read_response_to(HTTPClient& http, uint8_t *target, int size);
+bool csft_binary_read_response_to(HTTPClient& http, uint8_t *target, size_t size);
 
 #endif
