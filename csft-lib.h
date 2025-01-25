@@ -17,4 +17,6 @@ bool csft_binary_read_response_to(HTTPClient &http, uint8_t *target, size_t size
 
 void csft_switch_baudrate(int baudrate);
 
+void csft_restart();
+
 #endif

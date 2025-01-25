@@ -31,10 +31,7 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
             csft_loop();
             if (millis() > now + 30 * 1000)
             {
-                Serial.println("restarting...");
-                Serial.println();
-                Serial.println();
-                ESP.restart();
+                csft_restart();
             }
         };
         WiFiSettings.portal();
@@ -42,7 +39,7 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
 
     if (WiFiSettings.connect(false) == false)
     {
-        ESP.restart();
+        csft_restart();
     }
 }
 
@@ -135,4 +132,12 @@ void csft_switch_baudrate(int baudrate)
     delay(100);
     Serial.end();
     Serial.begin(baudrate);
+}
+
+void csft_restart()
+{
+    Serial.println("restarting...");
+    Serial.println();
+    Serial.println();
+    ESP.restart();
 }
