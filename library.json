@@ -1,6 +1,6 @@
 {
     "name": "Conesoft-Utilities",
-    "version": "1.0.22",
+    "version": "1.0.23",
     "keywords": "esp8266, wifi",
     "description": "small library with utilies for conesoft web devices",
     "authors": [

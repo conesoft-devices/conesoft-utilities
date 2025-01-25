@@ -14,7 +14,6 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
     Serial.println(name);
     pinMode(LED_BUILTIN, OUTPUT);
     LittleFS.begin();
-    WiFi.forceSleepBegin();
     WiFi.setPhyMode(WIFI_PHY_MODE_11G);
 
     WiFiSettings.hostname = "csft-device-";
@@ -29,7 +28,6 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
             csft_loop();
             if (millis() > now + 30 * 1000)
             {
-                delay(500);
                 ESP.restart();
             }
         };
@@ -38,7 +36,6 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
 
     if (WiFiSettings.connect(false) == false)
     {
-        delay(500);
         ESP.restart();
     }
 }
@@ -77,20 +74,24 @@ bool csft_web_request_internal(String url, String name, String id, bool (*proces
         Serial.print(" => ");
         Serial.print(response);
 
-        if (response > 0)
+        if (response >= 0 && response < 400)
         {
             if (process_response != 0)
             {
                 if (process_response(http) == false)
                 {
                     Serial.println(" ERROR processing");
+                    http.end();
                     return false;
                 }
             }
+            Serial.println(" OK");
+            http.end();
+            return true;
         }
-        Serial.println(" OK");
+        Serial.println(" ERROR response");
         http.end();
-        return true;
+        return false;
     }
     Serial.println(" ERROR creating request");
     return false;
