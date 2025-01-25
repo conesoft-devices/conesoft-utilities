@@ -31,6 +31,9 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
             csft_loop();
             if (millis() > now + 30 * 1000)
             {
+                Serial.println("restarting...");
+                Serial.println();
+                Serial.println();
                 ESP.restart();
             }
         };
