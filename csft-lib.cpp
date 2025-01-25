@@ -23,6 +23,13 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
     if (drd.detectDoubleReset())
     {
         Serial.println("reset detected");
+        unsigned long now = millis();
+        WiFiSettings.onPortalWaitLoop = [&]() -> void {
+            csft_loop();
+            if(millis() > now + 30 * 1000) {
+                ESP.restart();
+            }
+        };
         WiFiSettings.portal();
     }
 
