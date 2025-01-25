@@ -51,17 +51,27 @@ void csft_web_request_internal(String url, String name, String id, void (*proces
     BearSSL::WiFiClientSecure client;
     HTTPClient http;
 
+    Serial.print("setting up connection to ");
+    Serial.println(url);
+
     client.setInsecure();
 
+    Serial.println("begin");
     if (http.begin(client, url))
     {
+        Serial.println("configure headers");
         http.setUserAgent(name);
         http.addHeader(name + "-Id", id);
+        Serial.println("GET");
         http.GET();
+        Serial.println("getting response");
         if (process_response != 0)
         {
+            Serial.println("processing response");
             process_response(http);
+            Serial.println("processed response");
         }
+        Serial.println("end");
         http.end();
     }
 }
@@ -77,10 +87,16 @@ void csft_web_request(String url, String name, String id_suffix, void (*process_
 
 void csft_binary_read_response_to(HTTPClient &http, uint8_t *target, int size)
 {
+    Serial.println("read binary response");
     Stream& client = http.getStream();
     size_t length = http.getSize();
+    Serial.print("length: ");
+    Serial.println(length);
+    Serial.println("reading data");
     for (size_t index = 0; index < length; index += 0)
     {
+        Serial.print(".");
         index += client.readBytes(target + index, size - index);
     }
+    Serial.println("done");
 }
