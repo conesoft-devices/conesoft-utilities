@@ -9,7 +9,7 @@ DoubleResetDetector drd(10, 0);
 
 void csft_setup(String name, void (*configure_wifisettings_parameters)())
 {
-    Serial.begin(115200);
+    Serial.begin(74880);
     Serial.println();
     Serial.println();
     Serial.println();
