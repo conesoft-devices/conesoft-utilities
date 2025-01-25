@@ -22,6 +22,7 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
 
     if (drd.detectDoubleReset())
     {
+        Serial.println("reset detected");
         WiFiSettings.portal();
     }
 
