@@ -46,61 +46,59 @@ void csft_loop_for(int milliseconds)
     }
 }
 
-void csft_web_request_internal(String url, String name, String id, void (*process_response)(HTTPClient &http))
+bool csft_web_request_internal(String url, String name, String id, bool (*process_response)(HTTPClient &http))
 {
     BearSSL::WiFiClientSecure client;
     HTTPClient http;
 
-    Serial.print("setting up connection to ");
-    Serial.println(url);
-
     client.setInsecure();
 
-    Serial.println("begin");
     if (http.begin(client, url))
     {
-        Serial.println("configure headers");
         http.setUserAgent(name);
         http.addHeader(name + "-Id", id);
-        Serial.println("GET");
+        Serial.print("GET ");
+        Serial.print(url);
         int response = http.GET();
-        Serial.print("getting response ");
-        Serial.println(response);
+        Serial.print(" => ");
+        Serial.print(response);
         if (response > 0)
         {
             if (process_response != 0)
             {
-                Serial.println("processing response");
-                process_response(http);
-                Serial.println("processed response");
+                if (process_response(http) == false)
+                {
+                    return false;
+                }
             }
         }
-        Serial.println("end");
         http.end();
+        return true;
     }
+    return false;
 }
 
-void csft_web_request(String url, String name, void (*process_response)(HTTPClient &http))
+bool csft_web_request(String url, String name, bool (*process_response)(HTTPClient &http))
 {
-    csft_web_request_internal(url, name, WiFi.macAddress(), process_response);
+    return csft_web_request_internal(url, name, WiFi.macAddress(), process_response);
 }
-void csft_web_request(String url, String name, String id_suffix, void (*process_response)(HTTPClient &http))
+bool csft_web_request(String url, String name, String id_suffix, bool (*process_response)(HTTPClient &http))
 {
-    csft_web_request_internal(url, name, WiFi.macAddress() + "-" + id_suffix, process_response);
+    return csft_web_request_internal(url, name, WiFi.macAddress() + "-" + id_suffix, process_response);
 }
 
-void csft_binary_read_response_to(HTTPClient &http, uint8_t *target, int size)
+bool csft_binary_read_response_to(HTTPClient &http, uint8_t *target, int size)
 {
-    Serial.println("read binary response");
     Stream &client = http.getStream();
     size_t length = http.getSize();
-    Serial.print("length: ");
     Serial.println(length);
-    Serial.println("reading data");
+    if (length != size)
+    {
+        return false;
+    }
     for (size_t index = 0; index < length; index += 0)
     {
-        Serial.print(".");
         index += client.readBytes(target + index, size - index);
     }
-    Serial.println("done");
+    return true;
 }
