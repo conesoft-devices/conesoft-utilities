@@ -53,28 +53,34 @@ bool csft_web_request_internal(String url, String name, String id, bool (*proces
 
     client.setInsecure();
 
+    Serial.print("GET ");
+    Serial.print(url);
+
     if (http.begin(client, url))
     {
         http.setUserAgent(name);
         http.addHeader(name + "-Id", id);
-        Serial.print("GET ");
-        Serial.print(url);
         int response = http.GET();
+
         Serial.print(" => ");
         Serial.print(response);
+
         if (response > 0)
         {
             if (process_response != 0)
             {
                 if (process_response(http) == false)
                 {
+                    Serial.println(" ERROR processing");
                     return false;
                 }
             }
         }
+        Serial.println(" OK");
         http.end();
         return true;
     }
+    Serial.println(" ERROR creating request");
     return false;
 }
 
@@ -91,7 +97,9 @@ bool csft_binary_read_response_to(HTTPClient &http, uint8_t *target, size_t size
 {
     Stream &client = http.getStream();
     size_t length = http.getSize();
-    Serial.println(length);
+    Serial.print(" (length = ");
+    Serial.print(length);
+    Serial.print(")");
     if (length != size)
     {
         return false;
