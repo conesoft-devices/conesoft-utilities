@@ -24,9 +24,12 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
     {
         Serial.println("reset detected");
         unsigned long now = millis();
-        WiFiSettings.onPortalWaitLoop = [&]() -> void {
+        WiFiSettings.onPortalWaitLoop = [&]() -> void
+        {
             csft_loop();
-            if(millis() > now + 30 * 1000) {
+            if (millis() > now + 30 * 1000)
+            {
+                delay(500);
                 ESP.restart();
             }
         };
@@ -35,6 +38,7 @@ void csft_setup(String name, void (*configure_wifisettings_parameters)())
 
     if (WiFiSettings.connect(false) == false)
     {
+        delay(500);
         ESP.restart();
     }
 }
